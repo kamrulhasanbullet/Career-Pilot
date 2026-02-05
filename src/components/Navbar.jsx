@@ -10,7 +10,9 @@ import {
   Menu,
   X,
   Search,
+  LogIn,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,8 +33,15 @@ export default function Navbar() {
       <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-3 flex items-center justify-between shadow-2xl">
         {/* Logo Section */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-white transition-transform group-hover:rotate-12">
-            C
+          <div className="w-9 h-9 flex items-center justify-center font-bold text-white">
+            <Image
+              src="/Logo.png"
+              alt="CareerPilot Logo"
+              width={50}
+              height={50}
+              priority
+              className="rounded-4xl"
+            />
           </div>
           <span className="text-xl font-bold bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent hidden sm:block">
             CareerPilot
@@ -59,16 +68,16 @@ export default function Navbar() {
 
         {/* Search & Profile Section   */}
         <div className="flex items-center gap-3">
-          <button className="p-2 text-gray-400 hover:text-white transition-colors md:flex hidden">
-            <Search size={20} />
-          </button>
-
           <div className="h-6 w-px bg-white/10 mx-2 hidden md:block" />
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors cursor-pointer">
             <LogOut size={16} />
             <span className="hidden sm:inline">Logout</span>
           </button>
+          <Link href={'/login'} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors">
+            <LogIn size={16} />
+            <span className="hidden sm:inline">Login</span>
+          </Link>
 
           {/* Mobile Menu Toggle  */}
           <button
