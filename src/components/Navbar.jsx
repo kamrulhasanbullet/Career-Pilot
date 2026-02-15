@@ -9,14 +9,16 @@ import {
   LogOut,
   Menu,
   X,
-  Search,
   LogIn,
 } from "lucide-react";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  console.log(session);
 
   const navLinks = [
     {
@@ -70,14 +72,36 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <div className="h-6 w-px bg-white/10 mx-2 hidden md:block" />
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors cursor-pointer">
-            <LogOut size={16} />
-            <span className="hidden sm:inline">Logout</span>
-          </button>
-          <Link href={'/login'} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors">
-            <LogIn size={16} />
-            <span className="hidden sm:inline">Login</span>
-          </Link>
+          {status === "authenticated" ? (
+            <>
+              {session?.user?.image && (
+                <Image
+                  src={session.user.image}
+                  alt="User avatar"
+                  width={36}
+                  height={36}
+                  className="rounded-full"
+                />
+              )}
+              <button
+                onClick={() => signOut()}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+              >
+                <LogOut size={16} />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href={"/login"}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors"
+              >
+                <LogIn size={16} />
+                <span className="hidden sm:inline">Login</span>
+              </Link>
+            </>
+          )}
 
           {/* Mobile Menu Toggle  */}
           <button
