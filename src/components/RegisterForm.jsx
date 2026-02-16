@@ -23,7 +23,7 @@ export default function RegisterForm() {
     e.preventDefault();
     const result = await postUser(form);
 
-    if (result.acknowledged) {
+    if (result?.success) {
       await Swal.fire({
         icon: "success",
         title: "Welcome to Career Pilot",

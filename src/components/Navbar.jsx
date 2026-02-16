@@ -18,16 +18,33 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
-  console.log(session);
+  const role = session?.user?.role;
 
-  const navLinks = [
+  const USER_NAV = [
     {
       name: "Dashboard",
-      href: "/dashboard",
+      href: "/user-dashboard",
       icon: <LayoutDashboard size={18} />,
-    }, //
-    { name: "My Jobs", href: "/jobs", icon: <BriefcaseBusiness size={18} /> }, //
-    { name: "Resume", href: "/resume", icon: <FileUser size={18} /> }, //
+    },
+    {
+      name: "View All Jobs",
+      href: "/view-all-jobs",
+      icon: <BriefcaseBusiness size={18} />,
+    },
+    { name: "Resume", href: "/resume", icon: <FileUser size={18} /> },
+  ];
+
+  const COMPANY_NAV = [
+    {
+      name: "Post Job",
+      href: "/post-job",
+      icon: <LayoutDashboard size={18} />,
+    },
+    {
+      name: "My Jobs",
+      href: "/my-jobs",
+      icon: <BriefcaseBusiness size={18} />,
+    },
   ];
 
   return (
@@ -52,20 +69,35 @@ export default function Navbar() {
 
         {/* Desktop Navigation  */}
         <div className="hidden md:flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/5">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                pathname === link.href
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              {link.icon}
-              {link.name}
-            </Link>
-          ))}
+          {role === "company"
+            ? COMPANY_NAV.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    pathname === link.href
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              ))
+            : USER_NAV.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    pathname === link.href
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              ))}
         </div>
 
         {/* Search & Profile Section   */}
@@ -116,17 +148,29 @@ export default function Navbar() {
       {/* Mobile Menu Dropdown */}
       {isOpen && (
         <div className="absolute top-16 left-0 w-full bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 flex flex-col gap-2 md:hidden animate-in fade-in zoom-in duration-300">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 p-4 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
-            >
-              {link.icon}
-              {link.name}
-            </Link>
-          ))}
+          {role === "company"
+            ? COMPANY_NAV.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 p-4 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              ))
+            : USER_NAV.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 p-4 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              ))}
         </div>
       )}
     </nav>

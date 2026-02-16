@@ -77,7 +77,7 @@ const DUMMY_LISTINGS = [
   },
 ];
 
-export default function JobsPage() {
+export default function ViewALlJobsPage() {
   return (
     <div className="min-h-screen w-full bg-[#05070a] text-white p-6 overflow-x-hidden relative">
       {/* Aesthetic Background Glow */}
