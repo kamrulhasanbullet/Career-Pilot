@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   BriefcaseBusiness,
@@ -19,6 +19,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const role = session?.user?.role;
+  const router = useRouter();
+
+  const signOutFunc = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  };
 
   const USER_NAV = [
     {
@@ -116,7 +122,7 @@ export default function Navbar() {
                 />
               )}
               <button
-                onClick={() => signOut()}
+                onClick={() => signOutFunc()}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors cursor-pointer"
               >
                 <LogOut size={16} />
