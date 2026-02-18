@@ -11,15 +11,15 @@ const client = new MongoClient(uri, {
   },
 });
 
-
 // Ensure MongoDB is connected before returning collection
 export const dbConnect = async (collectionName) => {
   // Simple check to ensure client is connected
-  await client.connect(); 
+  await client.connect();
   return client.db(dbName).collection(collectionName);
 };
 
 export const collections = {
   USERS: "users",
-   JOBS: "jobs",
+  JOBS: "jobs",
+  APPLICATIONS: "applications",
 };

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   Search,
@@ -12,7 +12,6 @@ import {
   Tags,
 } from "lucide-react";
 
-
 export default function AllJobsCard() {
   const [jobs, setJobs] = useState([]);
 
@@ -22,7 +21,22 @@ export default function AllJobsCard() {
       .then((data) => setJobs(data));
   }, []);
 
-  console.log(jobs)
+  const handleApply = async (jobId) => {
+    const res = await fetch("/api/applications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jobId }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert("Applied Successfully");
+  };
 
   return (
     <div className="min-h-screen w-full bg-[#05070a] text-white p-6 overflow-x-hidden relative">
@@ -177,7 +191,10 @@ export default function AllJobsCard() {
                     </div>
                   </div>
 
-                  <button className="flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-xl font-bold hover:bg-indigo-400 transition-colors active:scale-95 text-sm">
+                  <button
+                    onClick={() => handleApply(job._id)}
+                    className="flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-xl font-bold hover:bg-indigo-400 transition-colors active:scale-95 text-sm cursor-pointer"
+                  >
                     Apply Now <ArrowUpRight size={18} />
                   </button>
                 </div>
