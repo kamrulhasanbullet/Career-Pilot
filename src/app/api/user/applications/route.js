@@ -1,4 +1,3 @@
-// /api/user/applications/route.js
 import { dbConnect, collections } from "@/lib/dbConnect";
 import { getSessionUser } from "@/lib/getSessionUser";
 

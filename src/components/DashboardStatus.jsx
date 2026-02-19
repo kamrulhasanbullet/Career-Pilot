@@ -11,45 +11,59 @@ import {
   Target,
 } from "lucide-react";
 
-const STATS = [
-  {
-    id: 1,
-    label: "Total Jobs",
-    value: "156",
-    icon: Briefcase,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
-  },
-  {
-    id: 2,
-    label: "Pending",
-    value: "42",
-    icon: Clock,
-    color: "text-amber-400",
-    bg: "bg-amber-500/10",
-  },
-  {
-    id: 3,
-    label: "Interviews",
-    value: "12",
-    icon: Users,
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-  },
-  {
-    id: 4,
-    label: "Rejected",
-    value: "28",
-    icon: XCircle,
-    color: "text-rose-400",
-    bg: "bg-rose-500/10",
-  },
-];
-
-
 export default function DashboardStatus() {
   const [applications, setApplications] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    interview: 0,
+    rejected: 0,
+  });
+
+  const calculateStats = (apps) => {
+    return {
+      total: apps.length,
+      pending: apps.filter((app) => app.status === "pending").length,
+      interview: apps.filter((app) => app.status === "interview").length,
+      rejected: apps.filter((app) => app.status === "rejected").length,
+    };
+  };
+
+  const STATS = [
+    {
+      id: 1,
+      label: "Total Applied",
+      value: stats.total,
+      icon: Briefcase,
+      color: "text-blue-400",
+      bg: "bg-blue-500/10",
+    },
+    {
+      id: 2,
+      label: "Pending",
+      value: stats.pending,
+      icon: Clock,
+      color: "text-amber-400",
+      bg: "bg-amber-500/10",
+    },
+    {
+      id: 3,
+      label: "Interviews",
+      value: stats.interview,
+      icon: Users,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+    },
+    {
+      id: 4,
+      label: "Rejected",
+      value: stats.rejected,
+      icon: XCircle,
+      color: "text-rose-400",
+      bg: "bg-rose-500/10",
+    },
+  ];
 
   useEffect(() => {
     fetch("/api/user/applications")
@@ -57,6 +71,7 @@ export default function DashboardStatus() {
       .then((data) => {
         setApplications(data);
         setChartData(generateChartData(data));
+        setStats(calculateStats(data));
       });
   }, []);
 
