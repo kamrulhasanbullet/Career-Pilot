@@ -44,7 +44,7 @@ export async function POST(req) {
   }
 }
 
-// 👉 GET: public OR company-wise jobs
+// GET: public OR company-wise jobs
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const companyOnly = searchParams.get("company");
