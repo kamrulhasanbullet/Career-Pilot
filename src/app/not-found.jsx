@@ -1,90 +1,54 @@
-import { Search, Home, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
+import { PlaneTakeoff, Home, Headset } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-blue-500/30 overflow-hidden flex items-center justify-center py-12">
-      {/* Animated Background Gradients */}
-      <div className="absolute top-0 left-1/3 w-96 h-96 bg-purple-600/10 blur-3xl rounded-full animate-pulse" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 blur-3xl rounded-full animate-pulse" />
+    <div className="min-h-screen w-full bg-[#05070a] text-white flex items-center justify-center relative overflow-hidden font-sans">
+      {/* Background Glows - Dashboard match */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[35%] h-[35%] bg-rose-600/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Content */}
-      <div className="relative z-10 px-6 py-12 text-center max-w-lg">
-        {/* Icon Container */}
-        <div className="mb-8 flex justify-center">
-          <div className="relative">
-            <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full animate-pulse" />
-            <div className="relative bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-full p-6 backdrop-blur-sm">
-              <Search className="w-12 h-12 text-purple-400" />
+      <div className="relative z-10 text-center flex flex-col items-center gap-8 max-w-2xl px-6">
+        {/* Animated Icon Section */}
+        <div className="relative">
+          <div className="text-6xl font-black text-white/5 select-none leading-none">
+            404
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-indigo-500/10 p-6 rounded-full border border-indigo-500/20 animate-pulse">
+              <PlaneTakeoff size={64} className="text-indigo-400" />
             </div>
           </div>
         </div>
 
-        {/* 404 Display */}
-        <div className="mb-6">
-          <h1 className="text-8xl md:text-9xl font-black bg-gradient-to-b from-purple-400 via-pink-400 to-purple-600 bg-clip-text text-transparent tracking-tighter">
-            404
+        {/* Copy */}
+        <div className="space-y-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+            Off the Radar
           </h1>
-        </div>
-
-        {/* Error Message */}
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 text-white">
-          Page Not Found
-        </h2>
-
-        <p className="text-gray-400 mb-8 leading-relaxed">
-          The page you're looking for doesn't exist or has been moved. Let's get you back on track.
-        </p>
-
-        {/* Suggestions */}
-        <div className="mb-8 p-4 rounded-lg bg-purple-500/10 border border-purple-500/20">
-          <p className="text-sm text-purple-300">
-            ✨ Try searching or navigate to a different page using the links below.
+          <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
+            Your requested destination has drifted out of coverage. Let's get
+            your career flight back on the right flight path.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex sm:flex-row gap-4 w-full justify-center items-center">
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all duration-200 hover:shadow-lg hover:shadow-blue-600/50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 transition-all px-12 py-4 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-500/20 whitespace-nowrap"
           >
-            <Home className="w-4 h-4" />
-            Go Home
+            <Home size={18} />
+            Back to Dashboard
           </Link>
-
-          <button
-            onClick={() => window.history.back()}
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all duration-200 hover:shadow-lg hover:shadow-gray-800/50 border border-gray-700"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Go Back
-          </button>
         </div>
 
-        {/* Quick Links */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <p className="text-xs text-gray-500 mb-4">Quick Links</p>
-          <div className="flex flex-wrap justify-center gap-2">
-            <Link
-              href="/"
-              className="text-xs px-3 py-1 rounded-full bg-gray-800/50 hover:bg-gray-700 text-gray-300 transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/view-all-jobs"
-              className="text-xs px-3 py-1 rounded-full bg-gray-800/50 hover:bg-gray-700 text-gray-300 transition-colors"
-            >
-              Jobs
-            </Link>
-            <Link
-              href="/user-dashboard"
-              className="text-xs px-3 py-1 rounded-full bg-gray-800/50 hover:bg-gray-700 text-gray-300 transition-colors"
-            >
-              Dashboard
-            </Link>
-          </div>
+        {/* Bottom Quote - Matches Dashboard style */}
+        <div className="pt-8 border-t border-white/5 w-full">
+          <p className="text-gray-600 text-xs italic tracking-widest uppercase">
+            "A wrong turn is just a detour to a new opportunity."
+          </p>
         </div>
       </div>
     </div>
