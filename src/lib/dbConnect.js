@@ -22,4 +22,5 @@ export const collections = {
   USERS: "users",
   JOBS: "jobs",
   APPLICATIONS: "applications",
+  RESUMES: "resumes",
 };

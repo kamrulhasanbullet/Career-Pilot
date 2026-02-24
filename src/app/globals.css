@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+.profile-card {
+    width: 380px;
+    height: 400px;
+}
+
+.resume-card {
+    width: 600px;
+    min-height: auto;
+}

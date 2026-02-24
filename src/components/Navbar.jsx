@@ -113,13 +113,15 @@ export default function Navbar() {
           {status === "authenticated" ? (
             <>
               {session?.user?.image && (
-                <Image
-                  src={session.user.image}
-                  alt="User avatar"
-                  width={36}
-                  height={36}
-                  className="rounded-full"
-                />
+                <Link href="/profile">
+                  <Image
+                    src={session.user.image}
+                    alt="User avatar"
+                    width={36}
+                    height={36}
+                    className="rounded-full"
+                  />
+                </Link>
               )}
               <button
                 onClick={() => signOutFunc()}
