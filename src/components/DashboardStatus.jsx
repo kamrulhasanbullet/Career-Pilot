@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import DashboardSkeleton from "./skeleton/DashboardSkeleton";
+import Link from "next/link";
 
 export default function DashboardStatus() {
   const [applications, setApplications] = useState([]);
@@ -28,6 +29,7 @@ export default function DashboardStatus() {
   const user = session?.user;
 
   const calculateStats = (apps) => {
+    console.log(apps);
     return {
       total: apps.length,
       pending: apps.filter((app) => app.status === "pending").length,
@@ -42,6 +44,7 @@ export default function DashboardStatus() {
       label: "Total Applied",
       value: stats.total,
       icon: Briefcase,
+      path: "/user-dashboard/total-applied",
       color: "text-blue-400",
       bg: "bg-blue-500/10",
     },
@@ -50,6 +53,7 @@ export default function DashboardStatus() {
       label: "Pending",
       value: stats.pending,
       icon: Clock,
+      path: "/user-dashboard/pending",
       color: "text-amber-400",
       bg: "bg-amber-500/10",
     },
@@ -58,6 +62,7 @@ export default function DashboardStatus() {
       label: "Interviews",
       value: stats.interview,
       icon: Users,
+      path: "/user-dashboard/interviews",
       color: "text-emerald-400",
       bg: "bg-emerald-500/10",
     },
@@ -66,6 +71,7 @@ export default function DashboardStatus() {
       label: "Rejected",
       value: stats.rejected,
       icon: XCircle,
+      path: "/user-dashboard/rejected",
       color: "text-rose-400",
       bg: "bg-rose-500/10",
     },
@@ -171,7 +177,8 @@ export default function DashboardStatus() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {STATS.map((stat) => (
-            <div
+            <Link
+              href={stat.path}
               key={stat.id}
               className="bg-[#0d1117] border border-white/5 p-6 rounded-4xl hover:border-indigo-500/30 transition-all group"
             >
@@ -187,7 +194,7 @@ export default function DashboardStatus() {
                 {stat.label}
               </p>
               <h3 className="text-3xl font-bold mt-1">{stat.value}</h3>
-            </div>
+            </Link>
           ))}
         </div>
 
