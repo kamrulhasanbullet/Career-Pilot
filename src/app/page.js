@@ -58,7 +58,7 @@ export default function HomePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            CareerPilot v2.0 is now live
+            CareerPilot is now live
           </motion.div>
 
           <h1 className="text-6xl md:text-9xl font-extrabold tracking-tight mb-8 bg-linear-to-b from-white via-white to-white/30 bg-clip-text text-transparent leading-[1.05]">
