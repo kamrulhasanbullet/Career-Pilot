@@ -94,3 +94,29 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+// ─── GET  /api/jobs/[id] ──────────────────────────────────────────────────────
+export async function GET(request, { params }) {
+  try {
+    const { id } = await params;
+
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid job ID" }, { status: 400 });
+    }
+
+    const jobsCollection = await dbConnect(collections.JOBS);
+    const job = await jobsCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!job) {
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(job);
+  } catch (err) {
+    console.error("GET /api/jobs/[id] error:", err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}

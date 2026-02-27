@@ -12,6 +12,7 @@ import {
 import JobCardSkeleton from "./skeleton/JobCardSkeleton";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function AllJobsCard() {
   const [jobs, setJobs] = useState([]);
@@ -242,9 +243,9 @@ export default function AllJobsCard() {
 
                         <div className="flex items-center gap-4 w-full sm:w-auto">
                           {/* Details Button - Minimalist */}
-                          <button className="flex-1 sm:flex-none px-8 py-4 rounded-2xl font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all active:scale-95">
+                          <Link href={`/view-all-jobs/${job._id}`} className="flex-1 sm:flex-none px-8 py-4 rounded-2xl font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all active:scale-95">
                             Details
-                          </button>
+                          </Link>
 
                           {/* Apply Button - The 'Wow' Element */}
                           <button
