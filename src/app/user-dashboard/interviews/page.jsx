@@ -127,7 +127,7 @@ export default function InterviewsPage() {
                     <div className="mt-8 pt-4 border-t border-slate-800/50 flex justify-between items-center text-[11px] font-mono text-slate-600">
                       <div className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
-                        <span>Remote</span>
+                        <span>{app.type}</span>
                       </div>
                       <span>
                         {new Date(app.createdAt).toLocaleDateString()}

@@ -35,6 +35,7 @@ export async function POST(req) {
       companyName: job.companyName,
       position: job.position,
       salary: job.salary,
+      type: job.type,
       status: "pending",
       createdAt: new Date(),
     });

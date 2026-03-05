@@ -451,7 +451,7 @@ export default function MyJobsCard() {
               </div>
               <button
                 onClick={closeModal}
-                className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <X size={28} />
               </button>
@@ -658,14 +658,11 @@ export default function MyJobsCard() {
                     <option value="Part-time" className="bg-[#0d1117]">
                       Part-time
                     </option>
-                    <option value="Contract" className="bg-[#0d1117]">
-                      Contract
-                    </option>
                     <option value="Internship" className="bg-[#0d1117]">
                       Internship
                     </option>
                     <option value="Freelance" className="bg-[#0d1117]">
-                      Freelance
+                      Remote
                     </option>
                   </select>
                 </div>
