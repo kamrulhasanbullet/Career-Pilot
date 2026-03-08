@@ -22,11 +22,14 @@ import {
   FileText,
   ChevronLeft,
   ExternalLink,
+  Clock,
+  Video,
+  Send,
 } from "lucide-react";
 import Link from "next/link";
 import MyJobCardSkeleton from "./MyJobCardSkeleton";
 
-// ─── Inline Resume View ──────────────
+// ─── Inline Resume View ──────────────────────────────────────────────────────
 function ResumeView({ data, loading }) {
   if (loading) {
     return (
@@ -103,7 +106,7 @@ function ResumeView({ data, loading }) {
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-gray-400 border-l-2 border-cyan-500 pl-3 mb-3">
           <Globe size={14} className="text-cyan-400" /> Portfolio
         </h3>
-         <a
+        <a
           href={data.portfolio}
           target="_blank"
           rel="noopener noreferrer"
@@ -154,10 +157,16 @@ export default function MyJobsCard() {
   const [deletingJob, setDeletingJob] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // ── Resume modal ─────────────────────────────────────────────────────────
-  const [resumeUser, setResumeUser] = useState(null); // { name, email }
+  // Resume modal
+  const [resumeUser, setResumeUser] = useState(null);
   const [resumeData, setResumeData] = useState(null);
   const [resumeLoading, setResumeLoading] = useState(false);
+
+  // ── Interview Schedule Modal ──────────────────────────────────────────────
+  const [interviewApp, setInterviewApp] = useState(null); // applicant being scheduled
+  const [interviewDateTime, setInterviewDateTime] = useState("");
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false); // success state
 
   useEffect(() => {
     setJobsLoading(true);
@@ -168,7 +177,7 @@ export default function MyJobsCard() {
       .finally(() => setJobsLoading(false));
   }, []);
 
-  // ─── Applicants Modal ─────────────────────────────────────────────────────
+  // ─── Applicants Modal ──────────────────────────────────────────────────────
   const openApplicantsModal = async (job) => {
     const jobId = job._id?.$oid || job._id;
     setSelectedJob(job);
@@ -191,7 +200,7 @@ export default function MyJobsCard() {
     setApplicants([]);
   };
 
-  // ─── Status Update ────────────────────────────────────────────────────────
+  // ─── Status Update ─────────────────────────────────────────────────────────
   const updateStatus = async (appId, newStatus) => {
     if (!["interview", "rejected"].includes(newStatus)) return;
     const resolvedId = appId?.$oid || appId;
@@ -214,7 +223,51 @@ export default function MyJobsCard() {
     }
   };
 
-  // ─── Resume Modal ─────────────────────────────────────────────────────────
+  // ─── Interview Modal Handlers ──────────────────────────────────────────────
+  const openInterviewModal = (app) => {
+    setInterviewApp(app);
+    setInterviewDateTime("");
+    setEmailSent(false);
+  };
+
+  const closeInterviewModal = () => {
+    setInterviewApp(null);
+    setInterviewDateTime("");
+    setEmailSent(false);
+    setEmailSending(false);
+  };
+
+  const handleSendInterviewEmail = async () => {
+    if (!interviewDateTime) return;
+    setEmailSending(true);
+    try {
+      // 1. Update status to "interview"
+      await updateStatus(interviewApp._id, "interview");
+
+      // 2. Send email with date/time + meet link
+      const res = await fetch("/api/send-interview-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          applicantEmail: interviewApp.userEmail,
+          applicantName: interviewApp.userName,
+          position: selectedJob.position,
+          companyName: selectedJob.companyName,
+          companyEmail:   selectedJob.companyEmail,
+          interviewDateTime,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Email send failed");
+      setEmailSent(true);
+    } catch (err) {
+      alert("Email পাঠানো যায়নি: " + err.message);
+    } finally {
+      setEmailSending(false);
+    }
+  };
+
+  // ─── Resume Modal ──────────────────────────────────────────────────────────
   const openResumeModal = async (app) => {
     setResumeUser({ name: app.userName, email: app.userEmail });
     setResumeData(null);
@@ -243,7 +296,7 @@ export default function MyJobsCard() {
     setResumeData(null);
   };
 
-  // ─── Edit Handlers ────────────────────────────────────────────────────────
+  // ─── Edit Handlers ─────────────────────────────────────────────────────────
   const openEditModal = (job) => {
     setEditingJob(job);
     setEditForm({
@@ -291,7 +344,7 @@ export default function MyJobsCard() {
     }
   };
 
-  // ─── Delete Handlers ──────────────────────────────────────────────────────
+  // ─── Delete Handlers ───────────────────────────────────────────────────────
   const openDeleteConfirm = (job) => setDeletingJob(job);
   const closeDeleteConfirm = () => setDeletingJob(null);
   const handleDelete = async () => {
@@ -316,6 +369,11 @@ export default function MyJobsCard() {
 
   const inputCls =
     "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 transition-colors";
+
+  // Min datetime = now (for the datetime-local input)
+  const minDateTime = new Date(Date.now() + 5 * 60 * 1000)
+    .toISOString()
+    .slice(0, 16);
 
   return (
     <div className="my-jobs-container">
@@ -355,8 +413,8 @@ export default function MyJobsCard() {
             </Link>
           </div>
         </div>
-        
-        {/* jobs card */}
+
+        {/* Job Cards */}
         <div className="grid grid-cols-1 gap-6">
           {jobsLoading ? (
             <>
@@ -437,7 +495,7 @@ export default function MyJobsCard() {
         </div>
       </div>
 
-      {/* ── APPLICANTS MODAL ─────────────────────────────────────────────────── */}
+      {/* ── APPLICANTS MODAL ──────────────────────────────────────────────────── */}
       {selectedJob && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-[#0d1117] border border-white/10 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
@@ -478,7 +536,6 @@ export default function MyJobsCard() {
                           <User size={20} className="text-indigo-400" />
                         </div>
                         <div>
-                          {/* ── Clickable name → resume modal ── */}
                           <button
                             onClick={() => openResumeModal(app)}
                             className="font-medium text-lg hover:text-indigo-300 transition-colors text-left underline underline-offset-2 decoration-indigo-500/40 hover:decoration-indigo-400 cursor-pointer"
@@ -495,9 +552,11 @@ export default function MyJobsCard() {
                         {new Date(app.createdAt).toLocaleDateString("en-GB")}
                       </p>
                     </div>
+
                     <div className="flex gap-3 mt-4 sm:mt-0">
+                      {/* ── Interview button → opens schedule modal ── */}
                       <button
-                        onClick={() => updateStatus(app._id, "interview")}
+                        onClick={() => openInterviewModal(app)}
                         disabled={app.status === "interview"}
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                           app.status === "interview"
@@ -507,6 +566,7 @@ export default function MyJobsCard() {
                       >
                         <UserCheck size={18} /> Interview
                       </button>
+
                       <button
                         onClick={() => updateStatus(app._id, "rejected")}
                         disabled={app.status === "rejected"}
@@ -527,14 +587,136 @@ export default function MyJobsCard() {
         </div>
       )}
 
-      {/* ── RESUME MODAL (z-60 → sits above applicants modal) ────────────────── */}
+      {/* ── INTERVIEW SCHEDULE MODAL (z-60) ────────────────────────────────────── */}
+      {interviewApp && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-[#0d1117] border border-emerald-500/20 rounded-3xl w-full max-w-md relative overflow-hidden">
+            {/* Top accent bar */}
+            <div className="h-1 w-full bg-linear-to-r from-emerald-500 via-teal-400 to-cyan-500" />
+
+            {/* Header */}
+            <div className="p-6 flex items-start justify-between border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                  <Video size={18} className="text-emerald-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Schedule Interview</h2>
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    {interviewApp.userName}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={closeInterviewModal}
+                className="p-2 rounded-full hover:bg-white/10 transition-colors text-gray-400 cursor-pointer"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              {emailSent ? (
+                /* ── Success state ── */
+                <div className="text-center py-6">
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4">
+                    <UserCheck size={32} className="text-emerald-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    Email Sent! 🎉
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-1">
+                    Interview invitation sent to
+                  </p>
+                  <p className="text-emerald-400 font-semibold text-sm mb-6">
+                    {interviewApp.userEmail}
+                  </p>
+                  <button
+                    onClick={closeInterviewModal}
+                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 transition-colors text-sm font-bold cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                /* ── Form state ── */
+                <div className="space-y-5">
+                  {/* Info row */}
+                  <div className="flex items-center gap-3 p-3 bg-white/3 border border-white/8 rounded-xl">
+                    <Mail size={14} className="text-gray-500 shrink-0" />
+                    <span className="text-sm text-gray-400 truncate">
+                      {interviewApp.userEmail}
+                    </span>
+                  </div>
+
+                  {/* Date & Time picker */}
+                  <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <Clock size={12} /> Interview Date &amp; Time *
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={interviewDateTime}
+                      min={minDateTime}
+                      onChange={(e) => setInterviewDateTime(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/60 transition-colors scheme:dark cursor-pointer"
+                    />
+                  </div>
+
+                  {/* What will be sent note */}
+                  <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/15 rounded-xl space-y-1.5">
+                    <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">
+                      Email will include:
+                    </p>
+                    <p className="text-xs text-gray-400 flex items-center gap-2">
+                      <Calendar size={12} className="text-emerald-500/70" />
+                      Selected date &amp; time
+                    </p>
+                    <p className="text-xs text-gray-400 flex items-center gap-2">
+                      <Video size={12} className="text-emerald-500/70" />
+                      Auto-generated Google Meet link
+                    </p>
+                    <p className="text-xs text-gray-400 flex items-center gap-2">
+                      <Briefcase size={12} className="text-emerald-500/70" />
+                      Position: {selectedJob?.position}
+                    </p>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex gap-3 pt-1">
+                    <button
+                      onClick={closeInterviewModal}
+                      className="flex-1 py-3 rounded-xl border border-white/10 text-gray-400 hover:bg-white/5 transition-colors text-sm font-medium cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSendInterviewEmail}
+                      disabled={!interviewDateTime || emailSending}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-bold cursor-pointer"
+                    >
+                      {emailSending ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <Send size={16} />
+                      )}
+                      {emailSending ? "Sending..." : "Send Invite"}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── RESUME MODAL (z-60 → sits above applicants modal) ─────────────────── */}
       {resumeUser && (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-[#0d1117] border border-cyan-500/20 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative">
-            {/* Header */}
             <div className="sticky top-0 bg-[#0d1117] border-b border-white/10 p-5 flex items-center justify-between z-10">
               <div className="flex items-center gap-3">
-                {/* Back button to go back to applicants (just close resume) */}
                 <button
                   onClick={closeResumeModal}
                   className="p-2 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-white cursor-pointer"
@@ -560,14 +742,12 @@ export default function MyJobsCard() {
                 <X size={22} />
               </button>
             </div>
-
-            {/* Resume Content */}
             <ResumeView data={resumeData} loading={resumeLoading} />
           </div>
         </div>
       )}
 
-      {/* ── UPDATE / EDIT MODAL ────────────────────────────────────────────────── */}
+      {/* ── EDIT MODAL ─────────────────────────────────────────────────────────── */}
       {editingJob && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-[#0d1117] border border-white/10 rounded-3xl w-full max-w-lg relative">
@@ -706,7 +886,7 @@ export default function MyJobsCard() {
         </div>
       )}
 
-      {/* ── DELETE CONFIRMATION MODAL ─────────────────────────────────────────── */}
+      {/* ── DELETE CONFIRM MODAL ───────────────────────────────────────────────── */}
       {deletingJob && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-[#0d1117] border border-red-500/20 rounded-3xl w-full max-w-md p-8 text-center relative">

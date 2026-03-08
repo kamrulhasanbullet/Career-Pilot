@@ -10,6 +10,8 @@ const nextConfig = {
       "images.unsplash.com", // Unsplash
       "example.com", // Company domain
       "media.istockphoto.com", // iStock image causing this error
+      "i.sstatic.net", // Stack Exchange image CDN: cross-origin restrictions apply
+      "encrypted-tbn0.gstatic.com", // Google Thumbnail cache: encrypted proxy, not embeddable
     ],
   },
 };
