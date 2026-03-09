@@ -191,7 +191,12 @@ export default function Navbar() {
               key={link.name}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 p-4 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+              // className="flex items-center gap-3 p-4 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+              className={`flex items-center gap-3 p-4 rounded-xl transition-all ${
+                pathname === link.href
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                  : "text-gray-400 hover:bg-white/5 hover:text-white"
+              }`}
             >
               {link.icon}
               {link.name}

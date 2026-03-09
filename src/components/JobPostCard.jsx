@@ -39,8 +39,8 @@ export default function JobPostCard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#05070a] text-white p-8 flex items-center justify-center">
-      <div className="max-w-3xl mx-auto bg-[#0d1117] border border-white/10 rounded-3xl p-8">
+    <div className="min-h-screen bg-[#05070a] text-white px-2 pt-16 flex items-center justify-center">
+      <div className="max-w-3xl mx-auto bg-[#0d1117] border border-white/10 rounded-3xl px-4 py-8">
         <h1 className="text-3xl font-extrabold mb-6">Post a New Job</h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">

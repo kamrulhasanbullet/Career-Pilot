@@ -760,7 +760,7 @@ export default function MyJobsCard() {
               </div>
               <button
                 onClick={closeEditModal}
-                className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <X size={24} />
               </button>
@@ -892,7 +892,7 @@ export default function MyJobsCard() {
           <div className="bg-[#0d1117] border border-red-500/20 rounded-3xl w-full max-w-md p-8 text-center relative">
             <button
               onClick={closeDeleteConfirm}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors text-gray-500"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors text-gray-500 cursor-pointer"
             >
               <X size={20} />
             </button>
