@@ -36,6 +36,10 @@ export default function PendingPage() {
   const { data: session } = useSession();
 
   useEffect(() => {
+    document.title = "Pending | CareerPilot";
+  }, []);
+
+  useEffect(() => {
     if (!session?.user) return;
 
     setLoading(true);
@@ -44,7 +48,7 @@ export default function PendingPage() {
       .then((data) => {
         const filtered = data.filter((app) => app.status === "pending");
         setApps(filtered);
-        setLoading(false); 
+        setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [session]);

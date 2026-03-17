@@ -29,6 +29,10 @@ export default function RejectedPage() {
   const { data: session } = useSession();
 
   useEffect(() => {
+    document.title = "Rejected | CareerPilot";
+  }, []);
+
+  useEffect(() => {
     if (!session?.user) return;
 
     setLoading(true);

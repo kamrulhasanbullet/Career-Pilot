@@ -45,6 +45,10 @@ export default function TotalAppliedPage() {
   const { data: session } = useSession();
 
   useEffect(() => {
+    document.title = "Total Applied | CareerPilot";
+  }, []);
+
+  useEffect(() => {
     if (!session?.user) return;
 
     setLoading(true);

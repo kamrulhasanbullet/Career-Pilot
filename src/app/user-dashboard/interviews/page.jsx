@@ -40,6 +40,10 @@ export default function InterviewsPage() {
   const { data: session } = useSession();
 
   useEffect(() => {
+    document.title = "Interviews | CareerPilot";
+  }, []);
+
+  useEffect(() => {
     if (!session?.user) return;
 
     setLoading(true);

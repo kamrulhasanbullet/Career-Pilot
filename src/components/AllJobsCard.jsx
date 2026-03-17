@@ -105,7 +105,7 @@ export default function AllJobsCard() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#05070a] text-white p-6 overflow-x-hidden relative">
+    <div className="min-h-screen w-full bg-[#05070a] text-white px-6 pt-12 pb-20 md:py-20 overflow-x-hidden relative">
       {/* Aesthetic Background Glow */}
       <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -230,7 +230,7 @@ export default function AllJobsCard() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 gap-8">
                 {visibleJobs.map((job) => (
                   <div
                     key={job._id}

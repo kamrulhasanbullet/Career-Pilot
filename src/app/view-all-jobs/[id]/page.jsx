@@ -69,6 +69,10 @@ export default function JobDetailsPage() {
       .then((data) => {
         setJob(data);
         setLoading(false);
+
+        if (data?.position) {
+          document.title = `${data.position} at ${data.companyName} | CareerPilot`;
+        }
       })
       .catch(() => {
         toast.error("Failed to load job details.");
