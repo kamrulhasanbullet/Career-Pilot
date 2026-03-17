@@ -149,9 +149,9 @@ export default function Navbar() {
                   <Image
                     src={session.user.image}
                     alt="User avatar"
-                    width={36}
-                    height={36}
-                    className="rounded-full"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover aspect-square border border-white/10"
                   />
                 </Link>
               )}
