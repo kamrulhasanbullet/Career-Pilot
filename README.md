@@ -4,7 +4,7 @@
 
 🔗 **Live Site:** [https://career-pilot-nu.vercel.app](https://career-pilot-nu.vercel.app)
 
-📁 **GitHub:** [https://github.com/kamrulhasanbullet/Career-Pilot](https://github.com/kamrulhasanbullet/Career-Pilot)
+📁 **Admin:** gmail: superadmin@gmail.com pass: Superadmin@gmail.com
 
 ---
 
