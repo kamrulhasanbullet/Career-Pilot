@@ -5,7 +5,7 @@ import { Mail, Lock, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
-
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginForm() {
   const params = useSearchParams();
@@ -120,11 +120,7 @@ export default function LoginForm() {
               onClick={handleGoogleLogin}
               className="cursor-pointer w-full py-3 bg-white text-black font-semibold rounded-2xl flex items-center justify-center gap-3 hover:bg-gray-100 transition-all"
             >
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="google"
-                className="w-5 h-5"
-              />
+              <FcGoogle size={24} />
               Continue with Google
             </button>
           </div>
